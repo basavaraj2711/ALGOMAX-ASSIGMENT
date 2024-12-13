@@ -88,6 +88,9 @@ A web-based grocery shopping assistant that helps users manage their shopping li
 
 If you'd like to contribute to this project, feel free to fork the repository and submit a pull request. Please follow the coding guidelines and ensure your changes are well-tested.
 
+##LIVE LINK
+https://basavaraj2711.github.io/ALGOMAX-ASSIGMENT/
+
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
