@@ -98,6 +98,8 @@ This project is open source and available under the [MIT License](LICENSE).
 - **Font Awesome**: For providing beautiful icons.
 - **Voice Recognition**: For enabling voice commands in the app.
 
+  LIVE-
+
 ```
 
 ### Notes:
