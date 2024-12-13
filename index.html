@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Grocery Shopping Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div id="app" class="max-w-md mx-auto min-h-screen flex flex-col">
+        <!-- Tutorial Overlay -->
+        <div id="tutorialOverlay" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg text-center relative">
+                <button id="closeTutorial" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="text-2xl font-bold mb-4">Welcome to Smart Grocery!</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-list text-green-500 text-2xl"></i>
+                        <p>Create and manage your shopping lists easily</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-dollar-sign text-green-500 text-2xl"></i>
+                        <p>Set budgets and track your spending</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-tags text-green-500 text-2xl"></i>
+                        <p>Items automatically categorized for easy shopping</p>
+                    </div>
+                </div>
+                <button id="skipTutorial" class="mt-6 bg-green-500 text-white px-4 py-2 rounded">Get Started</button>
+            </div>
+        </div>
+
+        <!-- Main App Content -->
+        <nav class="flex justify-around bg-white py-3 shadow-md fixed bottom-0 inset-x-0 z-40">
+            <div class="nav-item flex flex-col items-center cursor-pointer" data-screen="shoppingList">
+                <i class="fas fa-home text-xl"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item flex flex-col items-center cursor-pointer" data-screen="lists">
+                <i class="fas fa-list text-xl"></i>
+                <span>Lists</span>
+            </div>
+            <div class="nav-item flex flex-col items-center cursor-pointer" data-screen="settings">
+                <i class="fas fa-cog text-xl"></i>
+                <span>Settings</span>
+            </div>
+        </nav>
+
+        <!-- Shopping List Screen -->
+        <div id="shoppingListScreen" class="flex-1">
+            <div class="screen-header">
+                <h1 class="text-xl font-bold mb-2">My Shopping List</h1>
+                <div class="flex items-center space-x-2">
+                    <input type="number" id="budgetInput" placeholder="Set Budget ($)" class="flex-1 p-2 border rounded">
+                    <button id="setBudgetButton" class="bg-green-500 text-white px-4 py-2 rounded">Set</button>
+                </div>
+                <div id="remainingBudget" class="mt-2 font-bold">Remaining: $0.00</div>
+            </div>
+
+            <div class="main-content p-4">
+                <!-- Store Map Section -->
+                <div class="store-map-container mb-4">
+                    <h2 class="text-lg font-bold mb-2">Store Map</h2>
+                    <div id="storeMap" class="bg-white p-4 rounded-lg shadow-md">
+                        <canvas id="mapCanvas" width="340" height="400"></canvas>
+                    </div>
+                </div>
+
+                <div class="search-section">
+                    <div class="relative mb-4 flex gap-2">
+                        <div class="flex-1 relative">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+                            <input type="text" id="searchBar" placeholder="Search items..." class="w-full pl-10 p-2 border rounded">
+                        </div>
+                        <button id="voiceCommandBtn" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+
+                    <div class="categories-container">
+                        <div class="category bg-green-500 text-white px-3 py-1 rounded-full cursor-pointer" data-category="all">All</div>
+                        <div class="category bg-gray-200 px-3 py-1 rounded-full cursor-pointer" data-category="dairy">Dairy</div>
+                        <div class="category bg-gray-200 px-3 py-1 rounded-full cursor-pointer" data-category="vegetables">Vegetables</div>
+                        <div class="category bg-gray-200 px-3 py-1 rounded-full cursor-pointer" data-category="fruits">Fruits</div>
+                        <div class="category bg-gray-200 px-3 py-1 rounded-full cursor-pointer" data-category="meat">Meat</div>
+                        <div class="category bg-gray-200 px-3 py-1 rounded-full cursor-pointer" data-category="pantry">Pantry</div>
+                    </div>
+                </div>
+
+                <div class="shopping-list-container">
+                    <ul id="shoppingList" class="space-y-2"></ul>
+                </div>
+            </div>
+
+            <button id="addItemButton" class="fixed bottom-16 right-4 bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- Lists Screen -->
+        <div id="listsScreen" class="flex-1 p-4 hidden">
+            <header class="mb-4">
+                <h1 class="text-xl font-bold mb-2">All Lists</h1>
+                <button id="addListButton" class="bg-green-500 text-white px-4 py-2 rounded">Add New List</button>
+            </header>
+            <ul id="allLists" class="space-y-2"></ul>
+        </div>
+
+        <!-- Add Item Modal -->
+        <div id="addItemModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg w-11/12 max-w-md relative">
+                <button id="closeAddItemModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="text-xl font-bold mb-4">Add Item</h2>
+                <input type="text" id="itemName" placeholder="Item name" class="w-full p-2 mb-2 border rounded">
+                <input type="number" id="itemPrice" placeholder="Price" class="w-full p-2 mb-2 border rounded">
+                <select id="itemCategory" class="w-full p-2 mb-4 border rounded">
+                    <option value="dairy">Dairy</option>
+                    <option value="vegetables">Vegetables</option>
+                    <option value="fruits">Fruits</option>
+                    <option value="meat">Meat</option>
+                    <option value="pantry">Pantry</option>
+                </select>
+                <select id="itemList" class="w-full p-2 mb-4 border rounded">
+                    <option value="default">Default List</option>
+                </select>
+                <div class="flex justify-end space-x-2">
+                    <button id="cancelAdd" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+                    <button id="confirmAdd" class="bg-green-500 text-white px-4 py-2 rounded">Add Item</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="settingsScreen" class="flex-1 p-4 hidden">
+            <h2 class="text-xl font-bold mb-6">Settings</h2>
+            
+            <!-- Theme Settings -->
+            <div class="bg-white rounded-lg p-4 mb-4 shadow-md">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Dark Mode</h3>
+                        <p class="text-sm text-gray-600">Toggle dark mode for better visibility</p>
+                    </div>
+                    <button onclick="toggleDarkMode()" 
+                        class="px-4 py-2 rounded-lg transition-colors dark-mode-toggle flex items-center gap-2">
+                        <i class="fas fa-sun"></i>
+                        <span class="toggle-text">Enable Dark Mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add List Modal -->
+        <div id="addListModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg w-11/12 max-w-md">
+                <h2 class="text-xl font-bold mb-4">Add New List</h2>
+                <input type="text" id="listName" placeholder="List name" class="w-full p-2 mb-4 border rounded">
+                <div class="flex justify-end space-x-2">
+                    <button id="cancelListAdd" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+                    <button id="confirmListAdd" class="bg-green-500 text-white px-4 py-2 rounded">Add List</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add this modal for node information -->
+        <div id="nodeInfoModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg w-11/12 max-w-md relative">
+                <button id="closeNodeInfo" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 id="nodeTitle" class="text-xl font-bold mb-4"></h2>
+                <div id="nodeContent" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- Add this modal for sharing list -->
+        <div id="shareListModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg w-11/12 max-w-md relative">
+                <button id="closeShareModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="text-xl font-bold mb-4">Share List</h2>
+                <div class="share-content space-y-4">
+                    <div class="share-link-container">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Shareable Link:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="shareLink" class="flex-1 p-2 border rounded bg-gray-50" readonly>
+                            <button id="copyLink" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="share-buttons flex justify-center gap-4">
+                        <button class="share-btn bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" data-channel="whatsapp">
+                            <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+                        </button>
+                        <button class="share-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" data-channel="email">
+                            <i class="fas fa-envelope mr-2"></i>Email
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update the confirmation modal -->
+        <div id="confirmationModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg w-11/12 max-w-md relative transform scale-95 transition-all duration-200">
+                <div id="confirmationMessage" class="mb-6">
+                    <!-- Content will be dynamically inserted here -->
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button id="cancelDelete" class="px-6 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
+                        Cancel
+                    </button>
+                    <button id="confirmDelete" class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add this modal for voice commands -->
+        <div id="voiceCommandModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg w-11/12 max-w-md relative text-center">
+                <div id="voiceStatus" class="mb-4 text-lg font-medium">Listening...</div>
+                <div class="voice-animation mb-6">
+                    <div class="voice-wave"></div>
+                </div>
+                <div id="voiceText" class="text-gray-600 mb-4">Say something like "Add milk" or "Where is cereal?"</div>
+                <button id="stopVoiceCommand" class="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 transition-colors">
+                    Stop
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

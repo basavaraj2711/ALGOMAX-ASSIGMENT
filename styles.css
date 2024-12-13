@@ -1,0 +1,180 @@
+:root[data-theme="light"] {
+    --background-color: #f5f5f5;
+    --text-color: #333333;
+    --card-background: #ffffff;
+    --border-color: #e2e8f0;
+    --primary-color: #4CAF50;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] {
+    --background-color: #121212;
+    --text-color: #e0e0e0;
+    --card-background: #1e1e1e;
+    --border-color: #2d2d2d;
+    --primary-color: #66BB6A;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.theme-toggle-btn:hover {
+    border-color: var(--primary-color);
+}
+
+/* Apply theme to elements */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card, .modal-content, .list-item {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+}
+
+/* Theme transition */
+* {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease;
+}
+
+/* Dark mode styles */
+:root {
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+    --button-bg: #4CAF50;
+    --button-text: #ffffff;
+}
+
+/* Dark mode theme */
+body.dark-mode {
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --card-bg: #1e1e1e;
+    --border-color: #2d2d2d;
+    --button-bg: #ffffff;
+    --button-text: #121212;
+}
+
+/* Base styles */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+/* Dark mode specific styles */
+.dark-mode .bg-white,
+.dark-mode .modal > div,
+.dark-mode nav,
+.dark-mode .store-map-container {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Text colors in dark mode */
+.dark-mode .text-gray-800,
+.dark-mode .text-gray-700,
+.dark-mode .font-bold,
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3 {
+    color: var(--text-color) !important;
+}
+
+.dark-mode .text-gray-600 {
+    color: #a0aec0 !important;
+}
+
+/* Button styles in dark mode */
+.dark-mode .bg-green-500,
+.dark-mode .bg-blue-500,
+.dark-mode #addItemButton,
+.dark-mode #setBudgetButton,
+.dark-mode #confirmAdd,
+.dark-mode #confirmListAdd {
+    background-color: var(--button-bg) !important;
+    color: var(--button-text) !important;
+}
+
+/* Dark mode toggle button */
+.dark-mode [onclick="toggleDarkMode()"] {
+    background-color: var(--text-color) !important;
+    color: var(--background-color) !important;
+}
+
+/* Input and select styles in dark mode */
+.dark-mode input,
+.dark-mode select,
+.dark-mode #searchBar {
+    background-color: #2d2d2d !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Category pills in dark mode */
+.dark-mode .category {
+    background-color: #2d2d2d;
+    color: var(--text-color);
+}
+
+.dark-mode .category.active {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+/* List items in dark mode */
+.dark-mode .list-item {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+}
+
+/* Store map in dark mode */
+.dark-mode #mapCanvas {
+    background-color: var(--card-bg);
+}
+
+/* Modal backgrounds in dark mode */
+.dark-mode .modal {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+/* Add smooth transitions */
+* {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease;
+}
+
+/* Navigation in dark mode */
+.dark-mode .nav-item {
+    color: var(--text-color);
+}
+
+.dark-mode .nav-item.active {
+    color: var(--button-bg);
+}
+
+/* Hover effects in dark mode */
+.dark-mode .bg-green-500:hover,
+.dark-mode .bg-blue-500:hover {
+    opacity: 0.9;
+}
+
+/* Cancel buttons in dark mode */
+.dark-mode #cancelAdd,
+.dark-mode #cancelListAdd,
+.dark-mode #cancelDelete {
+    background-color: #2d2d2d;
+    color: var(--text-color);
+}
